@@ -1,13 +1,15 @@
 package com.example.myproducts
 
+import com.google.gson.annotations.SerializedName
+
 data class Product(
-    var id:Int,
-    var title:String,
-    var description:String,
-    var price:Double,
-    var rating:Double,
-    var stock:Int,
-    var brand:String,
-    var category: String,
-    var thumbnail:String
+    val id:Int,
+    val title:String,
+    @SerializedName("description") val desc:String,
+    val price:Double,
+    val rating:Double,
+    val stock:Int,
+    val brand:String,
+    val category: String,
+    val thumbnail:String
 )

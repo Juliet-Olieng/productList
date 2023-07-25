@@ -1,58 +1,88 @@
+//package com.example.myproducts
+//
+//import ProductRVAdapter
+//import ProductViewModel
+//import android.os.Bundle
+//import androidx.activity.viewModels
+//import androidx.appcompat.app.AppCompatActivity
+//import androidx.recyclerview.widget.GridLayoutManager
+//import com.example.myproducts.databinding.ActivityMainBinding
+//
+//class MainActivity : AppCompatActivity() {
+//    private lateinit var binding: ActivityMainBinding
+//    private lateinit var productRVAdapter: ProductRVAdapter
+//    private val viewModel by viewModels<ProductViewModel>()
+//    private var productList: List<Product> = emptyList()
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+//        initializeList()
+//        viewModel.fetchProducts()
+//
+//
+//    }
+//
+//   private fun initializeList() {
+//        viewModel.productList.observe(this) {
+//            productRVAdapter = ProductRVAdapter(productList?: emptyList(),this)
+//            binding.rvProducts.layoutManager = GridLayoutManager(this@MainActivity, 2)
+//            binding.rvProducts.adapter = productRVAdapter
+//        }
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        initializeList()
+//    }
+//}
+//
+//
+//
+//
+//
+
+
 package com.example.myproducts
 
 import ProductRVAdapter
-import androidx.appcompat.app.AppCompatActivity
+import ProductViewModel
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.myproducts.databinding.ActivityMainBinding
-import com.example.myproducts.databinding.ProducListBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
-    lateinit var productRVAdapter:ProductRVAdapter
-    var productList:List<Product> = emptyList()
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var productRVAdapter: ProductRVAdapter
+    private val viewModel by viewModels<ProductViewModel>()
+    private var productList: List<Product> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityMainBinding.inflate(layoutInflater)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        productRVAdapter=ProductRVAdapter(emptyList())
+        // Call the function to initialize the RecyclerView
+        initializeList()
+
+        viewModel.fetchProducts()
     }
 
-    override fun onResume() {
-        super.onResume()
-        fetchProduct()
-    }
-    fun fetchProduct(){
-        var apiClient=ApiClient.buildClient(ApiInterface::class.java)
-        var request =apiClient.getProduct()//defined in the interface
-        request.enqueue(object: Callback<ProductResponse> {
-            override fun onResponse(call:Call<ProductResponse>,response:Response<ProductResponse>){
-                if (response.isSuccessful){
-                    var product =response.body()?.products
-                    var productRVAdapter=ProductRVAdapter(product?: emptyList())
-                    binding.rvProducts.layoutManager=GridLayoutManager(this@MainActivity,2)
-                    binding.rvProducts.adapter=productRVAdapter
-                    Toast.makeText(baseContext,
-                    "fetched ${product?.size} product", Toast.LENGTH_LONG).show()
-                }
-                else{
-                    Toast.makeText(baseContext,response.errorBody()?.string(),Toast.LENGTH_LONG).show()
-                }
+    private fun initializeList() {
+        viewModel.productList.observe(this) { products ->
+            products?.let {
+                productList = it
+                productRVAdapter = ProductRVAdapter(productList, this)
+                binding.rvProducts.layoutManager = GridLayoutManager(this@MainActivity, 2)
+                binding.rvProducts.adapter = productRVAdapter
+
+                productRVAdapter.notifyDataSetChanged()
             }
-            override fun onFailure(call: Call<ProductResponse>,t:Throwable){
-                Toast.makeText(baseContext,t.message,Toast.LENGTH_LONG).show()
-            }
-        })
-
+        }
     }
-
-
-
 }
