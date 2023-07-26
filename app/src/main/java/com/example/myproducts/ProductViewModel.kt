@@ -1,10 +1,9 @@
+package com.example.myproducts
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myproducts.ApiClient
-import com.example.myproducts.ApiInterface
-import com.example.myproducts.Product
 import kotlinx.coroutines.launch
 
 class ProductViewModel : ViewModel() {

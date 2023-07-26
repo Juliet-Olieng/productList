@@ -1,10 +1,10 @@
+package com.example.myproducts
 
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myproducts.Product
 import com.example.myproducts.databinding.ProducListBinding
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
@@ -42,6 +42,7 @@ class ProductRVAdapter(private var productList: List<Product>, private val conte
             intent.putExtra("PRODUCT_ID", currentProduct.id)
             intent.putExtra("PRODUCT_TITLE", currentProduct.title)
             context.startActivity(intent)
+
         }
     }
 }
